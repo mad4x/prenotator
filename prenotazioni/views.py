@@ -23,20 +23,19 @@ def deleteBooking(request, id):
     try:
         booking = Booking.objects.get(id=id)
     except Booking.DoesNotExist:
-        return Response({"error":"prenotazione non trovata"}, status=404)
+        return Response({"error":"prenotazione non trovata"}, status=status.HTTP_404_NOT_FOUND)
 
     booking.delete()
-    return Response({"message":"prenotazione eliminata con successo"}, status=204)
+    return Response({"message":"prenotazione eliminata con successo"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['PATCH'])
 def updateBooking(request, id):
     try:
         booking = Booking.objects.get(id=id)
     except Booking.DoesNotExist:
-        return Response({"error":"prenotazione non trovata"})
+        return Response({"error":"prenotazione non trovata"}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = BookingSerializer(booking, request.data, partial=True)
-
+    serializer = BookingSerializer(booking, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response({"message":"prenotazione aggiornata con successo"}, status=status.HTTP_200_OK)

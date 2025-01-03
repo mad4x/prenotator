@@ -15,13 +15,6 @@ class Booking(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-    def clean(self):
-        if self.date < now() or self.start_time < now():
-            raise ValidationError("Non si può effettuare una prenotazione nel passato.")
-        elif self.end_time < self.start_time:
-            raise ValidationError("La orario di fine deve venire dopo di quello d'inizio.")
-
-
     def __str__(self):
         return (f"{self.name} ha prenotato {self.lab}\n"
                 f"{self.date.strftime('%d/%m/%Y')}   {self.start_time.strftime('%H:%M')} - {self.start_time.strftime('%H:%M')}")
