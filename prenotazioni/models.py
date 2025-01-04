@@ -14,6 +14,7 @@ class Booking(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    is_archived = models.BooleanField(default=False)
 
     def __str__(self):
         return (f"{self.name} ha prenotato {self.lab}\n"
