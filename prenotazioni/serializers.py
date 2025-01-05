@@ -12,9 +12,6 @@ class BookingSerializer(serializers.ModelSerializer):
     def validate_is_archived(self, value):
         if 'is_archived' in self.initial_data:
             raise serializers.ValidationError("Non puoi modificare is_archived")
-        if value:
-            raise serializers.ValidationError("Non puoi modificare una prenotazione passata.")
-        return value
 
     def validate_date(self, value):
         if value < timezone.now().date():  #errore: data passata
@@ -41,17 +38,25 @@ class BookingSerializer(serializers.ModelSerializer):
         else:
             end_time = self.instance.end_time
 
+
+        #se la prenotazione è archiviata
+        if self.instance.is_archived:
+            raise serializers.ValidationError("Non puoi modificare una prenotazione passata.")
+
         #se la prenotazione è ad un orario già passato
         if date == timezone.now().date() and start_time < current_time:
             raise serializers.ValidationError("Non puoi effettuare una prenotazione nel passato.")
+
         #se l'ora di fine e prima di quella d'inizio
         if end_time < start_time:
             raise serializers.ValidationError("L'orario di fine non può essere prima di quello d'inizio.")
+
         #se la prenotazione dura più di 2 ore
         start_datatime = datetime.combine(datetime.today(), start_time)
         end_datatime = datetime.combine(datetime.today(), end_time)
         if end_datatime - start_datatime > timedelta(hours=2):
             raise serializers.ValidationError("La prenotazione deve essere meno lunga di 2 ore.")
+
         #se la prenotazione viene effettuata più di 30 giorni prima
         if date - current_date > timedelta(days=30):
             raise serializers.ValidationError("La prenotazione non può essere effettuata più di 30 giorni prima.")

@@ -18,4 +18,4 @@ class Booking(models.Model):
 
     def __str__(self):
         return (f"{self.name} ha prenotato {self.lab}\n"
-                f"{self.date.strftime('%d/%m/%Y')}   {self.start_time.strftime('%H:%M')} - {self.start_time.strftime('%H:%M')}")
+                f"{self.date.strftime('%d/%m/%Y')}   {self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')}")
